@@ -87,10 +87,11 @@
         NSLog(@"[XGDemo] register push error");
     }];
     NSLog(@"[XGDemo] device token is %@", deviceTokenStr);*/
-    NSDictionary *dict = [NSDictionary dictionaryWithObject:self.util.deviceToken forKey:@"data"];
-    CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
-    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-    
+    if(self.util.deviceToken != nil){
+        NSDictionary *dict = [NSDictionary dictionaryWithObject:self.util.deviceToken forKey:@"data"];
+        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    }
     /*
   // FIXME: 放到 background thread 里运行时无法执行回调
   [self.util registerPush:alias successCallback:^{
