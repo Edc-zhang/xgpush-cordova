@@ -1,5 +1,6 @@
 #import "CDVXGPushPlugin.h"
 #import "CDVXGPushUtil.h"
+#import "XGPush.h"
 
 @implementation CDVXGPushPlugin
 
@@ -72,7 +73,25 @@
 - (void) registerpush:(CDVInvokedUrlCommand*)command {
   NSString* alias = [command.arguments objectAtIndex:0];
   NSLog(@"[XGPushPlugin] registerpush: %@", alias);
-
+    
+    
+    NSLog(@"[XGPush] register with token:%@ alias:%@", self.util.deviceToken, alias);
+    if ([alias respondsToSelector:@selector(length)] && [alias length] > 0) {
+        NSLog(@"[XGPush] setting alias:%@", alias);
+        [XGPush setAccount:alias];
+    }
+    
+    /*NSString *deviceTokenStr = [XGPush registerDevice:self.util.deviceToken account:alias successCallback:^{
+        NSLog(@"[XGDemo] register push success");
+    } errorCallback:^{
+        NSLog(@"[XGDemo] register push error");
+    }];
+    NSLog(@"[XGDemo] device token is %@", deviceTokenStr);*/
+    NSDictionary *dict = [NSDictionary dictionaryWithObject:self.util.deviceToken forKey:@"data"];
+    CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    
+    /*
   // FIXME: 放到 background thread 里运行时无法执行回调
   [self.util registerPush:alias successCallback:^{
     // 成功
@@ -85,7 +104,7 @@
     NSLog(@"[XGPushPlugin] registerpush error");
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-  }];
+  }];*/
 }
 
 /**
